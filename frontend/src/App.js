@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // from react-router-dom
+import { HStack, Text, Flex, IconButton, useColorMode,VStack } from "@chakra-ui/react";
+
+import { NavBar } from './components/NavBar';
+import { HomePage } from "./pages/HomePage";
+import { Registration } from "./pages/Registration";
+import { IssuesPage } from "./pages/IssuesPage";
+import { IssueSet } from "./pages/IssueSet";
+import { IndividualIssues } from "./pages/IndividualIssues";
+
 
 function App() {
+
+  const {toggleColorMode, colorMode} = useColorMode();
+
+  const isDark = colorMode === "dark"
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <VStack>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<Registration />} />
+          <Route path="/issues" element={<IssuesPage />} />
+          <Route path="/issues-main" element={<IssueSet />} />
+          <Route path="/issues/:issueId" element={<IndividualIssues/>} />
+        </Routes>
+    </VStack>
   );
 }
 
