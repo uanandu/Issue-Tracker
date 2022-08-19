@@ -19,7 +19,7 @@ express()
   .use(require("cors")())
 
   // endpoints here
-    .get("/api/issues", getissues)
+    .get("/api/allissues", getissues)
     .get("/api/issues/:id", getIssueById)
     .post("/api/issues", addIssue)
     .patch("/api/issues/", updateIssue)

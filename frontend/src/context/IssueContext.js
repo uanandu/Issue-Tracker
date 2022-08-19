@@ -23,8 +23,9 @@ export const IssueProvider = ({ children }) => {
   // get issues from backend
   useEffect(() => {
     axios
-      .get("/api/issues")
+      .get("/api/allissues")
       .then((res) => {
+        console.log(res.data);
         setIssueList(res.data.issue_list);
         setIssueState("success");
       })
@@ -50,7 +51,7 @@ export const IssueProvider = ({ children }) => {
     setIssueImage(URL.createObjectURL(e.target.files[0]));
   }
 
-  console.log("issues here", issueImage);
+  console.log(issues);
 
   const handleSubmit = (e) => {
     e.preventDefault();
