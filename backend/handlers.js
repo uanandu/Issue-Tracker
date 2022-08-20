@@ -156,6 +156,49 @@ const updateIssue = async (req, res) => {
   }
 };
 
+// PATCH: /api/specfic-issues/:issueId/comments
+// We use PATCH to add a comment to an issue
+const addComment = async (req, res) => {
+
+  const IssueId = req.params.issueId;
+  const { comment } = req.body;
+
+  try {
+    const client = new MongoClient(MONGO_URI, options);
+    console.log("Connected to MongoDB");
+
+    await client.connect();
+
+    const db = client.db("issues");
+
+    const issue = await db.collection("issueList").updateOne(
+      {
+        _id: IssueId.issueId,
+      },
+      {
+        $push: {
+          comments: comment,
+        },
+      }
+    );
+
+    res.status(200).json({
+      status: "success",
+      issue: issue,
+    });
+
+    client.close();
+
+    console.log("Disconnected from MongoDB");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  }
+};
+
 // /api/issues/
 // We use DELETE to delete an issue
 
@@ -204,4 +247,5 @@ module.exports = {
   addIssue,
   updateIssue,
   deleteIssue,
+  addComment,
 }; // export the handlers

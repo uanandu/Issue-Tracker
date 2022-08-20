@@ -7,6 +7,7 @@ const {
     addIssue,
     updateIssue,
     deleteIssue,
+    addComment,
 } = require("./handlers");
 
 
@@ -19,8 +20,12 @@ express()
   .use(require("cors")())
 
   // endpoints here
+    // all issues
     .get("/api/allissues", getissues)
+    // specific issue
     .get("/api/issues/:id", getIssueById)
+    // patch comment to issue
+    .patch("/api/specific-issues/:issueId", addComment)
     .post("/api/issues", addIssue)
     .patch("/api/issues/", updateIssue)
     .delete("/api/issues/:id", deleteIssue)

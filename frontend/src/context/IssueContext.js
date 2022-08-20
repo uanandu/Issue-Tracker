@@ -14,12 +14,14 @@ export const IssueProvider = ({ children }) => {
     description: "",
     severity: "",
     due: "",
+    comments: [],
   });
   const [issueImage, setIssueImage] = useState("");
   const [issueList, setIssueList] = useState([]);
   const [issueState, setIssueState] = useState("pending");
   const [createdOn, setCreatedOn] = useState(moment().format("MMMM Do YYYY"));
 
+  const [userComment, setUserComment] = useState("");
   // get issues from backend
   useEffect(() => {
     axios
@@ -33,6 +35,28 @@ export const IssueProvider = ({ children }) => {
         setIssueState("error");
       });
   }, []);
+
+  // comment change
+  const handleCommentChange = (e) => {
+    setUserComment(e.target.value);
+  }
+
+  console.log("user comment", userComment);
+
+  // add comment to issue
+  const addComment = (e, issueId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    axios
+      .patch(`/api/specific-issues/${issueId}`, {
+        comment: userComment,
+      })
+      .then((res) => {
+        console.log(res.data)
+        window.location.reload();
+      })
+    }
 
   // functions for changing and setting the values based on the form inputs
   const handleChange = (e) => {
@@ -51,13 +75,9 @@ export const IssueProvider = ({ children }) => {
     setIssueImage(URL.createObjectURL(e.target.files[0]));
   }
 
-  console.log(issues);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    console.log("image source", issues.imageSrc);
 
     axios
       .post("/api/issues", {
@@ -66,6 +86,7 @@ export const IssueProvider = ({ children }) => {
         severity: issues.severity,
         created: createdOn,
         due: issues.due,
+        comments: issues.comments,
         imageSrc: issueImage,
       })
       .then((res) => {
@@ -97,7 +118,7 @@ export const IssueProvider = ({ children }) => {
   };
 
   return (
-    <IssueContext.Provider value={{ issueImage, issueList, handleChange, handleImageChange, handleSubmit, deleteIssue }}>
+    <IssueContext.Provider value={{ issueImage, issueList, userComment,  handleChange, handleImageChange, handleSubmit,addComment, deleteIssue, handleCommentChange }}>
       {children}
     </IssueContext.Provider>
   );

@@ -11,32 +11,43 @@ import {
   Image,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { IssueContext } from "../context/IssueContext";
+
 export const IndividualIssues = () => {
+
+  const {addComment, userComment, handleCommentChange} = useContext(IssueContext);
+
   const { toggleColorMode, colorMode } = useColorMode();
 
   const isDark = colorMode === "dark";
 
   const issueId = useParams();
   const [individualIssue, setIndividualIssue] = useState({});
-
-  console.log("issueId", issueId.issueId);
+  const [commentIsSet, setCommentIsSet] = useState(false);
 
   // here we fetch the individual issues by issueID
+
+const [comment, setComment] = useState([]);
 
   useEffect(() => {
     axios
       .get(`/api/issues/${issueId.issueId}`)
       .then((res) => {
-        setIndividualIssue(res.data.issue);
+        setIndividualIssue(res.data.issue)
+        setCommentIsSet(true)
+        if (res.data.issue.comments.length > 0) {
+          setCommentIsSet(!commentIsSet);
+          setComment(res.data.issue.comments);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [issueId.id]);
+  }, []);
 
   return (
     <VStack
@@ -61,7 +72,8 @@ export const IndividualIssues = () => {
         alignItems="center"
       >
         <Text position="relative" w="100%" fontSize="2xl">
-          <strong>Issue ID:{" "}</strong>{issueId.issueId} 🤖
+          <strong>Issue ID: </strong>
+          {issueId.issueId} 🤖
         </Text>
         {individualIssue && (
           <>
@@ -96,14 +108,33 @@ export const IndividualIssues = () => {
               <Image src={individualIssue.imageSrc} />
               <Button>Edit</Button>
             </Flex>
+            <Text><strong>comment: </strong></Text>
+            {comment ? (
+              <>
+                {comment.map((comment) => {
+                  return (
+                    <Text>
+                      {comment}
+                    </Text>
+                  );
+                })}
+              </>
+            ) : (
+              <Text>No comments yet</Text>
+            )}
           </>
         )}
       </Stack>
       <Stack>
-        <form>
+        <form onSubmit={addComment}>
           <FormControl>
             <FormLabel>Comment section:</FormLabel>
-            <Textarea name="comment" type="text" placeholder="comments here" />
+            <Textarea
+              name="comment"
+              type="text"
+              placeholder="comments here"
+              onChange={(e)=>handleCommentChange(e, issueId)}
+            />
             <Button type="submit" mt={5}>
               Comment
             </Button>
