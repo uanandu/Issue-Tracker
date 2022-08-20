@@ -28,7 +28,7 @@ Goal: Aim of this project is to create a bug/issue tracking system.
 
 ## Demo
 
-Insert gif or link to demo
+![issue-tracker-project2](https://user-images.githubusercontent.com/105119755/185758168-1a15e419-6260-4140-8cc1-9d889256ba16.gif)
 
 
 ## Screenshots
