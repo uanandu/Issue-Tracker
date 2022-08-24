@@ -3,6 +3,8 @@
 
 Goal: Aim of this project is to create a bug/issue tracking system.
 
+# Depoyed website
+https://issue-tracker-eight.vercel.app/
 
 ## Authors
 
